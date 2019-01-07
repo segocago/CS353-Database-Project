@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="css/style.css" rel="stylesheet">
+
+  <!-- MDBootstrap Datatables  -->
+  <link href="css/addons/datatables.min.css" rel="stylesheet">
+
+  <!-- MDBootstrap Datatables  -->
+  <script type="text/javascript" src="js/addons/datatables.min.js"></script>
+  <style>
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+      bottom: .5em;
+    }
+
+    .section {
+
+      position: relative;
+      border-bottom-color: black;
+      border-bottom-width: 2px;
+      /*border-bottom-style: dashed;*/
+      padding: 25px 50px 25px 50px;
+      width: 100%;
+    }
+
+    #user_information_section {
+      height: 180px;
+    }
+
+    .user_basic_information {
+      position: absolute;
+      display: inline;
+      float: left;
+    }
+
+    .user_schedule {
+      display: inline;
+      float: right;
+    }
+
+    #head_doctor_section {}
+
+    #hospital_information {
+      margin-bottom: 25px;
+    }
+
+    .material-icons {
+      padding-left: 20px;
+    }
+
+    #patient_id {
+      display: none;
+    }
+
+    .section_header {
+      height: 50px;
+      background-color: #333333;
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+      margin-top: 20px;
+
+    }
+
+    #prescription {
+      display:none;
+    }
+
+    #examination_result{
+      display:none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- User Information -->
+  <div class="section" id="user_information_section">
+    <div class="user_basic_information">
+      <text id="user_name">degismemis isim</text>
+      <br>
+      <text id="user_department">Department of bla bla</text>
+      <br>
+      <text id="user_title">Assistant Doctor</text>
+      <br>
+      <text id="user_schedule">Mon: 10.30</text>
+      <a href = "logout.php" style = "padding:3px; background-color:#D3D3D3; color:#000000; border: solid 1px #333333; margin-left:450px">Log Out</a>
+    </div>
+    <!--<div class="user_schedule">
+      <table>
+        <tr>
+          <td>Day</td>
+          <td>Available Hours</td>
+        </tr>
+        <tr>
+          <td>Monday: </td>
+          <td>10.40 - 12.30</td>
+        </tr>
+        <tr>
+          <td>Tuesday: </td>
+          <td>10.40 - 12.30</td>
+        </tr>
+        <tr>
+          <td>Wednesday: </td>
+          <td>10.40 - 12.30</td>
+        </tr>
+        <tr>
+          <td>Thursday: </td>
+          <td>10.40 - 12.30</td>
+        </tr>
+        <tr>
+          <td>Friday: </td>
+          <td>10.40 - 12.30</td>
+        </tr>
+      </table>
+    </div> -->
+  </div>
+
+  <!-- Head Doctor -->
+  <div class="section" id="head_doctor_section">
+    <div class="section_header">
+      <h3>Hospital Information</h3>
+    </div>
+    <div id="hospital_information">
+      <text id="hospital_name">
+        <b>Ankara Ataturk Training and Research Hospital</b>
+      </text>
+      <a href="#">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <br>
+      <text>
+        <b>Capacity:</b>
+      </text>
+      <text id="hospital_capacity">1500</text>
+      <a href="#">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <br>
+      <text>
+        <b>Hospital Telephone: </b>
+      </text>
+      <text id="hospital_telephone"> +90 505 ...</text>
+      <a href="#">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <br>
+      <text>
+        <b>Hospital Address: </b>
+      </text>
+      <text id="hospital_address">299. street, no: 14</text>
+      <a href="#">
+        <i class="material-icons">mode_edit</i>
+      </a>
+    </div>
+
+
+    <h2>Departments</h2>
+    <div class="departments_table_section">
+      <table id="departments_table" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="th-sm">Department Name</th>
+
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Department Name </th>
+          </tr>
+        </tfoot>
+      </table>
+      <div id="add_remove_dep">
+        Add/Remove Department:
+        <input id="input_department_name" id="input_department" type="text" name="department_name">
+        <button id="add_department">Add</button>
+        <button id="remove_department">Remove</button>
+      </div>
+    </div>
+
+    <div id="doctors_list"></div>
+    <h2>Doctor List</h2>
+    <div class="doctors_table_section">
+      <table id="doctors_table" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th class="th-sm">State ID </th>
+            <th class="th-sm">Name </th>
+            <th class="th-sm">Phone </th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>State ID </th>
+            <th>Name </th>
+            <th>Phone </th>
+
+
+          </tr>
+        </tfoot>
+      </table>
+      <div id="add_remove_doctor">
+        Add/Remove Doctor:
+        <p></p>
+        State ID:
+        <input id="input_doctor_ID" type="text" name="input_doctor_id">Department:
+        <input id="input_doctor_department" type="text" name="input_doctor_department">Title:
+        <input id="input_doctor_title" type="text" name="input_doctor_title"> Schedule:
+        <input id="input_doctor_schedule" type="text" name="input_doctor_schedule">
+        <button id="add_doctor">Add</button>
+        <button id="remove_doctor">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Patient -->
+  <div class="section" id="patient_section">
+    <div class="section_header">
+      <h3>Patient Information</h3>
+    </div>
+
+
+    <div id="patient_information"></div>
+    Patient's State ID:
+    <text id="patient_id"></text>
+    <input id="input_patient_ID" type="text" name="input_patient_id">
+    <button id="get_patient_information">Get Patient Information</button>
+    <p></p>
+    Name:
+    <text id="patient_name"></text>
+    <p></p>
+    Age:
+    <text id="patient_age"></text>
+    Weight:
+    <text id="patient_weight"></text>
+    Height:
+    <text id="patient_height"></text>
+    Bloodtype:
+    <text id="patient_bloodtype"></text>
+    <p></p>
+    <button id="view_patients_medical_information">View Patient's Medical Information</button>
+
+  </div>
+  <!-- New Examinations -->
+  <div class="section" id="new_examination_section">
+    <h2>New Examination</h2>
+    <div id="examination_information">
+      <text>Patient's State ID : </text>
+      <input id="input_patient_ID_new_exem" type="text" name="input_patient_id">
+      <p></p>
+      <text>Cause of examination: </text>
+      <input id="input_cause" type="text" name="input_patient_id">
+      <p></p>
+      <text>Date of examination : </text>
+      <input id="input_date" type="text" name="input_patient_id">
+      <p></p>
+      <text>Diagnose : </text>
+      <input id="input_diagnose" type="text" name="input_patient_id">
+      <p></p>
+      <form action="">
+        <input type="radio" name="examination" value="allergy"> Allergy
+        <input type="radio" name="examination" value="chronic_disease"> Chronic Disease
+        <input type="radio" name="examination" value="other"> Other
+      </form>
+      <p></p>
+      <button id="add_examination">Add examination</button>
+
+      <p></p>
+    </div>
+    <div id="examination_result">
+      <h3>Examination Results</h3>
+      Test Name:
+      <input id="input_test_name" type="text" name="input_test_name">Date:
+      <input id="input_test_date" type="text" name="input_test_date">Test result:
+      <input id="input_test_result" type="text" name="input_test_result">
+      <button id="add_test">Add Test</button>
+      <p></p>
+      Treatment Description:
+      <input id="input_treatment_desc" type="text" name="input_treatment_desc">Date:
+      <input id="input_treatment_date" type="text" name="input_treatment_date">
+      <button id="add_treatment">Add Treatment</button>
+      <p></p>
+
+      <div id="tests"></div>
+      <div id="treatments"></div>
+      <div class="section_header">
+        <h3>Prescription</h3>
+      </div>
+
+
+      <button id="submit_prescription">Open new prescription</button>
+
+
+      <p></p>
+      <div id="prescription">
+        <h3>Drug List</h3>
+        <table id="drugs_table" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="th-sm">Drug ID </th>
+              <th class="th-sm">Name </th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Drug ID </th>
+              <th>Name </th>
+
+            </tr>
+          </tfoot>
+        </table>
+        <p></p>
+        Drug ID:
+        <input id="input_drug_id" type="text" name="input_drug_id">Drug name:
+        <input id="input_drug_name" type="text" name="input_drug_name">
+        <button id="add_prescribed_drug">Add Drug to Prescription</button>
+        <p></p>
+        <h3>Drugs in the current prescription</h3>
+        <table id="prescribed_drugs_table" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="th-sm">Drug ID </th>
+              <th class="th-sm">Name </th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Drug ID </th>
+              <th>Name </th>
+
+            </tr>
+          </tfoot>
+        </table>
+
+
+
+      </div>
+      <div id="vaccine">
+        <h3>Add Vaccination Record</h3>
+        Vaccine Name:
+        <input id="input_vaccine_name" type="text" name="input_vaccine_name">Date:
+        <input id="input_vaccine_date" type="text" name="input_vaccine_date">Vaccine id:
+        <input id="input_vaccine_id" type="text" name="input_vaccine_id">
+        <button id="add_vaccine">Add Vaccine</button>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  //Scrollable table code
+  $(document).ready(function () {
+    //Doctors table initialization
+    $('#doctors_table').DataTable({
+      "scrollY": "200px",
+      "scrollCollapse": true,
+    });
+    $('.dataTables_length').addClass('bs-select');
+
+    //Departments table initialization
+    $('#departments_table').DataTable({
+      "scrollY": "200px",
+      "scrollCollapse": true,
+    });
+    $('.dataTables_length').addClass('bs-select');
+
+    //Drugs table initialization
+    $('#drugs_table').DataTable({
+      "scrollY": "200px",
+      "scrollCollapse": true,
+    });
+    $('.dataTables_length').addClass('bs-select');
+
+    //Prescribed drugs table initialization
+    $('#prescribed_drugs_table').DataTable({
+      "scrollY": "200px",
+      "scrollCollapse": true,
+    });
+    $('.dataTables_length').addClass('bs-select');
+  });
+
+  //Click listeners for buttons
+  $("#add_department").click(addDepartment);
+  $("#remove_department").click(removeDepartment);
+  $("#add_doctor").click(addDoctor);
+  $("#remove_doctor").click(removeDoctor);
+  $("#get_patient_information").click(getPatientInformation);
+  $("#view_patients_medical_information").click(function () {
+    var patient_ID = $("#input_patient_ID").val();
+    console.log("patient ıd: "+patient_ID);
+    window.location.href = 'patient.php' + '?' + "patient_ID="+patient_ID;
+    console.log("view patients medical info");
+  });
+  $("#add_examination").click(addExamination);
+  $("#add_test").click(addTest);
+  $("#add_treatment").click(addTreatment);
+  $("#add_prescribed_drug").click(addPrescribedDrug);
+  $("#submit_prescription").click(submitPrescription);
+
+  $("#add_vaccine").click(addVaccine);
+
+  function insertIntoDoctorsTable(stateID, name, phone) {
+
+    var newRow = "<tr>" + "<td>" + stateID + "</td>" + "<td>" + name + "</td>" + "<td>" + phone + "</td>" + "</tr>";
+
+    $("#doctors_table > tbody").append(newRow);
+
+  }
+
+  function insertIntoDepartmentsTable(departmentName) {
+
+    var newRow = "<tr>" + "<td>" + departmentName + "</td>" + "</tr>";
+
+    $("#departments_table > tbody").append(newRow);
+
+  }
+  function insertIntoAllDrugTable(drugID, drugName) {
+    var newRow = "<tr>" + "<td>" + drugID + "</td>" + "<td>" + drugName + "</td>" + "</tr>";
+    $("#drugs_table > tbody").append(newRow);
+  }
+
+  function insertIntoPrescribedDrugTable(drugID, drugName) {
+    var newRow = "<tr>" + "<td>" + drugID + "</td>" + "<td>" + drugName + "</td>" + "</tr>";
+    $("#prescribed_drugs_table > tbody").append(newRow);
+  }
+
+  function addDepartment() {
+    var hospital_department = $("#input_department_name").val();
+
+    $.post("doctors_profile.php",
+      {
+        action: "add_department",
+        hospital_department: hospital_department,
+        hospital_ID: hospitalID
+      },
+      function (data, status) {
+        console.log(data);
+
+      });
+
+
+  }
+  function removeDepartment() {
+
+    var hospital_department = $("#input_department_name").val();
+
+    $.post("doctors_profile.php",
+      {
+        action: "remove_department",
+        hospital_department: hospital_department,
+        hospital_ID: hospitalID
+      },
+      function (data, status) {
+        console.log(data);
+
+      });
+
+
+  }
+  function addDoctor() {
+    var stateID = $("#input_doctor_ID").val();
+    var department = $("#input_doctor_department").val();
+    var title = $("#input_doctor_title").val();
+    var schedule = $("#input_doctor_schedule").val();
+    console.log(hospitalID);
+    console.log(department);
+
+    $.post("doctors_profile.php",
+      {
+        action: "add_doctor",
+        state_ID: stateID,
+        doctor_department: department,
+        doctor_title: title,
+        doctor_schedule: schedule,
+        hospital_ID: hospitalID
+      },
+      function (data, status) {
+        console.log("add doctor return: "+data);
+
+      });
+
+  }
+
+  function removeDoctor() {
+
+    var stateID = $("#input_doctor_ID").val();
+    var department = $("#input_doctor_department").val();
+    var title = $("#input_doctor_title").val();
+    var schedule = $("#input_doctor_schedule").val();
+    console.log(hospitalID);
+
+    $.post("doctors_profile.php",
+      {
+        action: "remove_doctor",
+        state_ID: stateID,
+        hospital_ID: hospitalID
+      },
+      function (data, status) {
+        console.log(data);
+
+      });
+
+  }
+
+  function getPatientInformation() {
+    var stateID = $("#input_patient_ID").val();
+
+    $.post("doctors_profile.php",
+      {
+        action: "get_patient_information",
+        state_ID: stateID
+      },
+      function (data, status) {
+        if (data) {
+
+          data = JSON.parse(data);
+          data = data[0];
+          console.log(data);
+          var first_name = data.first_name;
+          var middle_name = data.middle_name;
+          var last_name = data.last_name;
+          var patient_height = data.patient_height;
+          var patient_weight = data.patient_weight;
+          var patient_bloodtype = data.patient_bloodtype;
+          var age = data.age;
+
+
+          $("#patient_id").text(stateID);
+          $("#patient_name").text(first_name + " " + middle_name + " " + last_name);
+          $("#patient_height").text(patient_height);
+          $("#patient_weight").text(patient_weight);
+          $("#patient_bloodtype").text(patient_bloodtype);
+          $("#patient_age").text(age);
+
+
+
+
+        } else {
+          alert("Invalid username or password")
+        }
+      });
+  }
+
+  function addExamination() {
+
+
+    var radioValue = $("input[name='examination']:checked").val();
+    console.log(radioValue);
+    var patient_ID = $("#input_patient_ID_new_exem").val();
+    var diagnose = $("#input_diagnose").val();
+    var cause = $("#input_cause").val();
+    var date = $("#input_date").val();
+    if (radioValue === "allergy") {
+
+      $.post("doctors_profile.php",
+        {
+          action: "add_allergy",
+          state_ID: patient_ID,
+          allergy_name: diagnose
+        },
+        function (data, status) {
+          console.log(data);
+
+        });
+
+    } else if (radioValue === "chronic_disease") {
+
+      $.post("doctors_profile.php",
+        {
+          action: "add_chronic_disease",
+          state_ID: patient_ID,
+          chronic_disease: diagnose
+        },
+        function (data, status) {
+          console.log(data);
+
+        });
+
+    } else {
+
+      $.post("doctors_profile.php",
+        {
+          action: "add_examination",
+          doctor_ID: stateID,
+          state_ID: patient_ID,
+          examination_cause: cause,
+          examination_date: date,
+          examination_diagnose: diagnose
+        },
+        function (data, status) {
+
+          lastExamID = data;
+          console.log(lastExamID);
+
+          $("#examination_result").show();
+
+        });
+
+      //console.log(patient_ID + cause + date + diagnose);
+    }
+  }
+
+  function requestStateID(){
+    $.post("doctors_profile.php",
+      {
+        action: "request_state_ID"
+        
+
+      },
+      function (data, status) {
+
+        console.log(data);
+        stateID = data;
+        console.log("state id: "+stateID);
+
+        getDoctorInformation(stateID);
+        getHospitalInformation(stateID);
+        getDrugs();
+      });
+  }
+
+  function addTest() {
+    var testName = $("#input_test_name").val();
+    var testDate = $("#input_test_date").val();
+    var testResult = $("#input_test_result").val();
+    //console.log(testName + testDate + testResult);
+    console.log("last exam id: " + lastExamID);
+    $.post("doctors_profile.php",
+      {
+        action: "add_test",
+        examination_ID: lastExamID,
+        test_name: testName,
+        test_result: testResult
+
+      },
+      function (data, status) {
+
+        console.log(data);
+
+      });
+  }
+
+  function addTreatment() {
+    var treatmentDesc = $("#input_treatment_desc").val();
+    var treatmentDate = $("#input_treatment_date").val();
+    console.log(treatmentDesc + treatmentDate);
+
+    $.post("doctors_profile.php",
+      {
+        action: "add_treatment",
+        examination_ID: lastExamID,
+        treatment_description: treatmentDesc
+
+      },
+      function (data, status) {
+
+        //lastExamID = data;
+        console.log(lastExamID)
+
+      });
+  }
+
+  function submitPrescription() {
+    console.log("submit pres");
+    console.log("last exam id pres: " + lastExamID);
+    $.post("doctors_profile.php",
+      {
+        action: "add_prescription",
+        examination_ID: lastExamID
+      },
+      function (data, status) {
+
+        lastPrescription = data;
+        console.log("last pres: " + lastPrescription);
+
+        $("#prescription").show();
+
+      });
+  }
+
+  function addPrescribedDrug() {
+    var drugID = $("#input_drug_id").val();
+    var drugName = $("#input_drug_name").val();
+    insertIntoPrescribedDrugTable(drugID, drugName);
+    console.log(drugID + " " + drugName);
+    console.log("last pres. id: " + lastPrescription);
+
+    $.post("doctors_profile.php",
+      {
+        action: "add_prescribed_drug",
+        prescription_ID: lastPrescription,
+        drug_ID: drugID
+
+      },
+      function (data, status) {
+
+        console.log("add pres return: " + data);
+      });
+  }
+
+
+  function addVaccine() {
+    var vaccineName = $("#input_vaccine_name").val();
+    var vaccineDate = $("#input_vaccine_date").val();
+    var vaccineID = $("#input_vaccine_id").val();
+    console.log(vaccineName + vaccineDate + vaccineID);
+    var patient_ID = $("#input_patient_ID_new_exem").val();
+    console.log("patient id: " + patient_ID + "doctor id: " + stateID);
+    $.post("doctors_profile.php",
+      {
+        action: "add_vaccine",
+        vaccine_ID: vaccineID,
+        state_ID: patient_ID,
+        doctor_ID: stateID,
+        date: vaccineDate
+
+      },
+      function (data, status) {
+
+
+
+      });
+  }
+  function getDoctorInformation(stateID) {
+
+    $.post("doctors_profile.php",
+      {
+        action: "get_doctor_information",
+        stateID: stateID
+      },
+      function (data, status) {
+        if (data) {
+
+          data = JSON.parse(data);
+          data = data[0];
+          console.log(data);
+          var first_name = data.first_name;
+          var middle_name = data.middle_name;
+          var last_name = data.last_name;
+          var doctor_department = data.doctor_department;
+          var doctor_title = data.doctor_title;
+          var doctor_schedule = data.doctor_schedule;
+
+          console.log(doctor_schedule);
+
+          $("#user_name").text(first_name + " " + middle_name + " " + last_name);
+          $("#user_department").text(doctor_department);
+          $("#user_title").text(doctor_title);
+          $("#user_schedule").text(doctor_schedule);
+
+
+        } else {
+          alert("Invalid username or password")
+        }
+      });
+
+  }
+
+  function getHospitalInformation(stateID) {
+
+    $.post("doctors_profile.php",
+      {
+        action: "get_hospital_information",
+        stateID: stateID
+      },
+      function (data, status) {
+        if (data) {
+          console.log(data);
+          data = JSON.parse(data);
+          //data = data[0];
+          //console.log(data);
+          var hospital_ID = data.hospital_ID;
+          hospitalID = hospital_ID;
+          var hospital_name = data.hospital_name;
+          var hospital_capacity = data.hospital_capacity;
+          var hospital_telephone = data.hospital_telephone;
+          var hospital_address = data.hospital_address;
+
+          //console.log(hospital_name);
+
+          $("#hospital_name").text(hospital_name);
+          $("#hospital_capacity").text(hospital_capacity);
+          $("#hospital_telephone").text(hospital_telephone);
+          $("#hospital_address").text(hospital_address);
+
+          getDepartments(hospitalID);
+          getDoctors(hospitalID);
+
+        } else {
+          alert("Invalid username or password")
+        }
+      });
+
+  }
+
+  function getDepartments(hospitalID) {
+
+    $.post("doctors_profile.php",
+      {
+        action: "get_departments",
+        hospitalID: hospitalID
+      },
+      function (data, status) {
+        if (data) {
+          console.log(data);
+          data = JSON.parse(data);
+          //data = data[0];
+          //console.log(data);
+          for (var i = 0; i < data.length; i++) {
+            var hospital_department = data[i].hospital_department;
+            insertIntoDepartmentsTable(hospital_department);
+          }
+
+        } else {
+          alert("no department")
+        }
+      });
+  }
+
+  function getDrugs() {
+
+    $.post("doctors_profile.php",
+      {
+        action: "get_drugs",
+
+      },
+      function (data, status) {
+        if (data) {
+          console.log(data);
+          data = JSON.parse(data);
+          //data = data[0];
+          //console.log(data);
+          for (var i = 0; i < data.length; i++) {
+            var drugID = data[i].drug_ID;
+            var drugName = data[i].drug_name;
+            insertIntoAllDrugTable(drugID, drugName);
+          }
+        } else {
+          alert("no department")
+        }
+      });
+
+  }
+
+  function getDoctors(hospitalID) {
+
+    $.post("doctors_profile.php",
+      {
+        action: "get_doctors",
+        hospital_ID: hospitalID
+      },
+      function (data, status) {
+        if (data) {
+          console.log(data);
+          data = JSON.parse(data);
+          //data = data[0];
+          //console.log(data);
+          for (var i = 0; i < data.length; i++) {
+            var state_ID = data[i].state_ID;
+            var first_name = data[i].first_name;
+            var last_name = data[i].last_name;
+            var phone = data[i].phone;
+
+            insertIntoDoctorsTable(state_ID, first_name + " " + last_name, phone);            
+          }
+
+        } else {
+          alert("no department")
+        }
+      });
+
+  }
+
+
+  insertIntoDoctorsTable("", "", "");
+  /*insertIntoDoctorsTable(98798, "cagatay", "0505 588");
+  insertIntoDoctorsTable(98799, "kaan", "0505 588");
+  insertIntoDoctorsTable(98799, "mert", "0505 588");*/
+
+  insertIntoDepartmentsTable("");
+  insertIntoAllDrugTable("", "");
+  insertIntoPrescribedDrugTable("", "");
+  //insertIntoDepartmentsTable("surgery");
+
+  var stateID = 123123;
+  var hospitalID = -1;
+  var lastExamID = -1;
+  var lastPrescription = -1;
+  requestStateID();
+  //console.log("State id: " + stateID);
+  //stateID = 123123;
+  
+
+
+
+
+
+</script>
+
+</html>
+
+,
